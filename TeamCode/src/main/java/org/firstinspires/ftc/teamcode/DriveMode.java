@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(group = "DriveMode")
 public class DriveMode extends LinearOpMode {
@@ -33,6 +34,25 @@ public class DriveMode extends LinearOpMode {
             backLeft.setPower(bL_Motor);
             frontRight.setPower(fR_Motor);
             backRight.setPower(bR_Motor);
+
+
+            /*
+             - While holding the right bumper on gamepad 1, the robot goes in a 'slow mode'
+             - This can be useful in multiple scenarios, ex: attempting to place a game piece, aligning for supesending on the rigging, etc.
+             - Values can be adjusted based on feedback from drivers
+            */
+
+            while (gamepad1.right_bumper) {
+                fL_Motor = Range.clip((y+x+rx), -0.5, 0.5);// Using the clip feature in order to activate 'slow mode'
+                bL_Motor = Range.clip((y-x+rx), -1.0, 0.5);// Using the clip feature in order to activate 'slow mode'
+                fR_Motor = Range.clip((y-x-rx), -1.0,0.5); // Using the clip feature in order to activate 'slow mode'
+                bR_Motor = Range.clip((y+x-rx), -1.0,0.5); // Using the clip feature in order to activate 'slow mode'
+
+                frontLeft.setPower(fL_Motor);
+                backLeft.setPower(bL_Motor);
+                frontRight.setPower(fR_Motor);
+                backRight.setPower(bR_Motor);
+            }
 
         }
     }
