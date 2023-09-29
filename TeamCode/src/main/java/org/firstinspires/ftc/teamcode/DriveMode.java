@@ -44,9 +44,9 @@ public class DriveMode extends LinearOpMode {
 
             while (gamepad1.right_bumper) {
                 fL_Motor = Range.clip((y+x+rx), -0.5, 0.5);// Using the clip feature in order to activate 'slow mode'
-                bL_Motor = Range.clip((y-x+rx), -1.0, 0.5);// Using the clip feature in order to activate 'slow mode'
-                fR_Motor = Range.clip((y-x-rx), -1.0,0.5); // Using the clip feature in order to activate 'slow mode'
-                bR_Motor = Range.clip((y+x-rx), -1.0,0.5); // Using the clip feature in order to activate 'slow mode'
+                bL_Motor = Range.clip((y-x+rx), -0.5, 0.5);// Using the clip feature in order to activate 'slow mode'
+                fR_Motor = Range.clip((y-x-rx), -0.5,0.5); // Using the clip feature in order to activate 'slow mode'
+                bR_Motor = Range.clip((y+x-rx), -0.5,0.5); // Using the clip feature in order to activate 'slow mode'
 
                 frontLeft.setPower(fL_Motor);
                 backLeft.setPower(bL_Motor);

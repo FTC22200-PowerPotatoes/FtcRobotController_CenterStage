@@ -23,7 +23,7 @@ public class DriveConstants {
     /*
      * These are motor constants that should be listed online for your motors. roadrunner
      */
-    public static final double TICKS_PER_REV = 8192;
+    public static final double TICKS_PER_REV = 537.7;
     public static final double MAX_RPM = 312;
 
     /*
@@ -34,7 +34,7 @@ public class DriveConstants {
      * If using the built-in motor velocity PID, update MOTOR_VELO_PID with the tuned coefficients
      * from DriveVelocityPIDTuner.
      */
-    public static final boolean RUN_USING_ENCODER = false;
+    public static final boolean RUN_USING_ENCODER = true;
     public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0, 0, 0,
             getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV));
 
@@ -59,9 +59,9 @@ public class DriveConstants {
     // kV after first test
     //updated
     //
-    public static double kV = 0.017;
-    public static double kA =  0.002;
-    public static double kStatic = 0.01;
+    public static double kV = 1/rpmToVelocity(MAX_RPM);
+    public static double kA =  0.0;
+    public static double kStatic = 0.0;
 
     /*
      * These values are used to generate the trajectories for you robot. To ensure proper operation,
@@ -91,10 +91,10 @@ public class DriveConstants {
      * You are free to raise this on your own if you would like. It is best determined through experimentation.
 
      */
-    public static double MAX_VEL = 30.5;
-    public static double MAX_ACCEL = 52.48180821614297;
-    public static double MAX_ANG_VEL = 4.401398131211778;
-    public static double MAX_ANG_ACCEL = Math.toRadians(184.02607784577722);
+    public static double MAX_VEL = 49.394643027;
+    public static double MAX_ACCEL = 49.394643027;
+    public static double MAX_ANG_VEL = Math.toRadians(180);
+    public static double MAX_ANG_ACCEL = Math.toRadians(180);
 
     /*
      * Adjust the orientations here to match your robot. See the FTC SDK documentation for details.
