@@ -30,10 +30,10 @@ public class DriveMode extends LinearOpMode {
 
 
 
-            double fL_Motor = Range.clip((y+x+rx), -0.8, 0.8); // fL = FrontLeft
-            double bL_Motor = Range.clip((y-x+rx), -0.8, 0.8); // bL = BackLeft
-            double fR_Motor = Range.clip((y-x-rx), -0.8, 0.8); // fR = FrontRight
-            double bR_Motor = Range.clip((y+x-rx), -0.8, 0.8); // bR = backRight
+            double fL_Motor = Range.clip((y+x+rx), -0.7, 0.7); // fL = FrontLeft
+            double bL_Motor = Range.clip((y-x+rx), -0.7, 0.7); // bL = BackLeft
+            double fR_Motor = Range.clip((y-x-rx), -0.7, 0.7); // fR = FrontRight
+            double bR_Motor = Range.clip((y+x-rx), -0.7, 0.7); // bR = backRight
 
             /*
              - While holding the right bumper on gamepad 1, the robot goes in a 'slow mode'
