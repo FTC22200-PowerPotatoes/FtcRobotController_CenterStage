@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(group = "DriveMode")
@@ -18,6 +19,7 @@ public class DriveMode extends LinearOpMode {
 
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
         if (isStopRequested()) return;
@@ -30,10 +32,10 @@ public class DriveMode extends LinearOpMode {
 
 
 
-            double fL_Motor = Range.clip((y+x+rx), -0.7, 0.7); // fL = FrontLeft
-            double bL_Motor = Range.clip((y-x+rx), -0.7, 0.7); // bL = BackLeft
-            double fR_Motor = Range.clip((y-x-rx), -0.7, 0.7); // fR = FrontRight
-            double bR_Motor = Range.clip((y+x-rx), -0.7, 0.7); // bR = backRight
+            double fL_Motor = Range.clip((y+x+rx), -0.99, 0.99); // fL = FrontLeft
+            double bL_Motor = Range.clip((y-x+rx), -0.99, 0.99); // bL = BackLeft
+            double fR_Motor = Range.clip((y-x-rx), -0.99, 0.99); // fR = FrontRight
+            double bR_Motor = Range.clip((y+x-rx), -0.99, 0.99); // bR = backRight
 
             /*
              - While holding the right bumper on gamepad 1, the robot goes in a 'slow mode'
@@ -42,12 +44,13 @@ public class DriveMode extends LinearOpMode {
             */
 
             if (gamepad1.right_bumper) {
-                fL_Motor = Range.clip((y+x+rx), -0.2, 0.2);// Using the clip feature in order to activate 'slow mode'
-                bL_Motor = Range.clip((y-x+rx), -0.2, 0.2);// Using the clip feature in order to activate 'slow mode'
-                fR_Motor = Range.clip((y-x-rx), -0.2,0.2); // Using the clip feature in order to activate 'slow mode'
-                bR_Motor = Range.clip((y+x-rx), -0.2,0.2); // Using the clip feature in order to activate 'slow mode'
+                fL_Motor = Range.clip((y+x+rx), -0.3, 0.3);// Using the clip feature in order to activate 'slow mode'
+                bL_Motor = Range.clip((y-x+rx), -0.3, 0.3);// Using the clip feature in order to activate 'slow mode'
+                fR_Motor = Range.clip((y-x-rx), -0.3,0.3); // Using the clip feature in order to activate 'slow mode'
+                bR_Motor = Range.clip((y+x-rx), -0.3,0.3); // Using the clip feature in order to activate 'slow mode'
 
             }
+
 
 
             frontLeft.setPower(fL_Motor);
@@ -56,6 +59,20 @@ public class DriveMode extends LinearOpMode {
             backRight.setPower(bR_Motor);
 
 
+            //todo: Add modular code
+
+
+            /*
+                Code for a possible double Linear Slide:
+                  if (gamepad2.right_trigger) {
+                      linearSlide1.setPower(Range.clip(gamepad2.right_trigger), 0.0, 0.8);
+                      linearSlide2.setPower(Range.clip(gamepad2.right_trigger), 0.0, 0.8);
+                  }
+                  else if (gamepad2.left_trigger) {
+                      linearSlide1.setPower(Range.clip(gamepad2.left_trigger), -0.8, 0.0);
+                      linearSlide2.setPower(Range.clip(gamepad2.right_trigger), -0.8, 0.0);
+                  }
+            */
 
 
 
