@@ -16,9 +16,12 @@ public class DriveMode extends LinearOpMode {
         DcMotor backLeft = hardwareMap.dcMotor.get("backLeft");
         DcMotor frontRight = hardwareMap.dcMotor.get("frontRight");
         DcMotor backRight = hardwareMap.dcMotor.get("backRight");
+        DcMotor linearSlide1 = hardwareMap.dcMotor.get("linearSlide1");
+        DcMotor linearSlide2 = hardwareMap.dcMotor.get("linearSlide2");
+        DcMotor intakeMotor = hardwareMap.dcMotor.get("intakeMotor");
 
 
-        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
@@ -62,19 +65,27 @@ public class DriveMode extends LinearOpMode {
             //todo: Add modular code
 
 
-            /*
-                Code for a possible double Linear Slide:
-                  if (gamepad2.right_trigger) {
-                      linearSlide1.setPower(Range.clip(gamepad2.right_trigger), 0.0, 0.8);
-                      linearSlide2.setPower(Range.clip(gamepad2.right_trigger), 0.0, 0.8);
-                  }
-                  else if (gamepad2.left_trigger) {
-                      linearSlide1.setPower(Range.clip(gamepad2.left_trigger), -0.8, 0.0);
-                      linearSlide2.setPower(Range.clip(gamepad2.right_trigger), -0.8, 0.0);
-                  }
-            */
+            if (gamepad2.left_trigger > 0.0) {
+                linearSlide1.setPower(-gamepad2.left_trigger);
+                linearSlide2.setPower(gamepad2.left_trigger);
+            }
+            if (gamepad2.right_trigger > 0.0) {
+                linearSlide1.setPower(gamepad2.right_trigger);
+                linearSlide2.setPower(-gamepad2.right_trigger);
+            }
+            else {
+                linearSlide1.setPower(0.0);
+                linearSlide2.setPower(0.0);
+            }
+            linearSlide1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            linearSlide2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-
+            while (gamepad2.a) {
+                intakeMotor.setPower(1.0);
+            }
+            if (gamepad2.b) {
+                intakeMotor.setPower(0.0);
+            }
 
 
         }
