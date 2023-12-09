@@ -5,10 +5,14 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(group = "DriveMode")
 public class DriveMode extends LinearOpMode {
-    @Override
+
+    double  gripPosition, contPower;
+    double  MIN_POSITION = 0, MAX_POSITION = 1;
+
     public void runOpMode() throws InterruptedException {
 
         // Motor config
@@ -19,9 +23,9 @@ public class DriveMode extends LinearOpMode {
         DcMotor linearSlide1 = hardwareMap.dcMotor.get("linearSlide1");
         DcMotor linearSlide2 = hardwareMap.dcMotor.get("linearSlide2");
         DcMotor intakeMotor = hardwareMap.dcMotor.get("intakeMotor");
+        Servo output= hardwareMap.servo.get("outTake");
 
-
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
@@ -80,13 +84,23 @@ public class DriveMode extends LinearOpMode {
             linearSlide1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             linearSlide2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-            while (gamepad2.a) {
-                intakeMotor.setPower(1.0);
-            }
-            if (gamepad2.b) {
-                intakeMotor.setPower(0.0);
-            }
+             if (gamepad2.a) {
+                intakeMotor.setPower(0.55);
+             }
+             else {
+                 intakeMotor.setPower(0.0);
+             }
+             if (gamepad2.b) {
+                 intakeMotor.setPower(-0.8);
+             }
 
+
+            if (gamepad2.left_bumper && gripPosition < MAX_POSITION) gripPosition = gripPosition + .0007;
+
+            // close the gripper on Y button if not already at the closed position.
+            if (gamepad2.right_bumper && gripPosition > MIN_POSITION) gripPosition = gripPosition - .0007;
+
+            output.setPosition(Range.clip(gripPosition, MIN_POSITION, MAX_POSITION));
 
         }
     }
