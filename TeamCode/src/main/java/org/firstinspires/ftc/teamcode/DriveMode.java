@@ -6,14 +6,30 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @TeleOp(group = "DriveMode")
 public class DriveMode extends LinearOpMode {
 
+    //Declare variables
     double gripPosition, contPower;
+    Servo gripServo;
+
+    final double rev = 1200; //one revolution = 5.11inch
     double MIN_POSITION = 0.1, MAX_POSITION = 0.6;
+    double airPos;
     boolean isGripperOpen = true;
+
+    boolean isAirplaneOn = true;
+
+    DistanceSensor lDistSensor;
+    DistanceSensor rDistSensor;
+
 
 
     public void runOpMode() throws InterruptedException {
@@ -25,19 +41,17 @@ public class DriveMode extends LinearOpMode {
         DcMotor backRight = hardwareMap.dcMotor.get("backRight");
         DcMotor linearSlide1 = hardwareMap.dcMotor.get("linearSlide1");
         DcMotor intakeMotor = hardwareMap.dcMotor.get("intakeMotor");
-        Servo output = hardwareMap.servo.get("outTake");
         DcMotor hangMec = hardwareMap.dcMotor.get("hang");
-        Servo airplane = hardwareMap.servo.get("airplane");
-        /*
-        TouchSensor touch1;
-        TouchSensor touch2;
 
-        touch1 = hardwareMap.get(TouchSensor.class, "touch1");
-        touch2 = hardwareMap.get(TouchSensor.class, "touch2");
+        //Servo Config
+        CRServo gripServo = hardwareMap.get(CRServo.class, "airplane");
+        Servo output = hardwareMap.servo.get("outTake");
 
-        */
+        //SensorConfig
+        lDistSensor = hardwareMap.get(DistanceSensor.class, "lDistSensor");
+        rDistSensor = hardwareMap.get(DistanceSensor.class, "rDistSensor");
 
-
+        //SetMotor Direction
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -91,9 +105,7 @@ public class DriveMode extends LinearOpMode {
             } else {
                 linearSlide1.setPower(0.0);
             }
-            if (gamepad2.x) {
-                airplane.setPosition(0.0);
-            }
+
             if (gamepad2.a) {
                 intakeMotor.setPower(0.55);
             } else if (gamepad2.b) {
@@ -101,11 +113,6 @@ public class DriveMode extends LinearOpMode {
             } else {
                 intakeMotor.setPower(0.0);
             }
-            /*
-            if (touch1.isPressed() && touch2.isPressed()) {
-                brake(0.0);
-            }
-            */
 
             if (gamepad2.y) {
                 // Toggle the gripper state only once per button press
@@ -124,11 +131,41 @@ public class DriveMode extends LinearOpMode {
                 sleep(200);
             }
 
-            // Update the gripper position continuously while the button is held
-            if (gamepad2.left_bumper && gripPosition < MAX_POSITION) {
-                gripPosition += 0.07;
-            } else if (gamepad2.right_bumper && gripPosition > MIN_POSITION) {
-                gripPosition -= 0.07;
+            //Stop Motor if BackButtonPressed
+
+            // todo: check touch sensor pressed stop robot
+
+
+
+            //Drone Launcher
+            //Release drone
+            if (gamepad1.y) {
+               gripServo.setPower(1);
+            }
+            else {
+                gripServo.setPower(0.0);
+            }
+
+            //Sets the angle of the drone launcher at 67degrees
+            if (gamepad1.dpad_up) {
+                // Calculate the target encoder position based on the desired angle
+                int targetPosition = (int) (rev);
+
+                // Set the target position for the motor
+                hangMec.setTargetPosition(targetPosition);
+
+                // Set the motor to run to the target position
+                hangMec.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                // Start the motor
+                hangMec.setPower(1.0);
+
+                // Wait until the motor reaches the target position
+                while (hangMec.isBusy()) {}
+
+                // Stop the motor after reaching the target position
+                hangMec.setPower(0.0);
+                hangMec.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
 
             // Update the gripper position
@@ -136,6 +173,15 @@ public class DriveMode extends LinearOpMode {
 
             // Delay to avoid loop spamming
             sleep(20);
+
+            // Telemetry for front distance sensor
+            // Telemetry for left distance sensor
+            telemetry.addData("Left Distance (cm)", String.format("%.01f cm", lDistSensor.getDistance(DistanceUnit.CM)));
+
+            // Telemetry for right distance sensor
+            telemetry.addData("Right Distance (cm)", String.format("%.01f cm", rDistSensor.getDistance(DistanceUnit.CM)));
+
+            telemetry.update();
 
 
         }
